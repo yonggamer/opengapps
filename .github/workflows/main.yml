@@ -10,7 +10,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-20.04
+    runs-on: windows-2022
 
     steps:
     - name: Checkout repository
@@ -23,62 +23,56 @@ jobs:
         java-version: '11'
 
     - name: Install required packages
-      run: sudo apt-get update && sudo apt-get install -y wget unzip coreutils bash
-      shell: bash
+      run: choco install wget unzip coreutils git
+      shell: pwsh
 
     - name: Check PATH variable
-      run: echo $PATH
-      shell: bash
+      run: echo $env:PATH
+      shell: pwsh
 
     - name: Download and Set up Android SDK Command Line Tools
       run: |
-        wget https://dl.google.com/android/repository/commandlinetools-linux-8512546_latest.zip -O android-sdk.zip
-        mkdir -p $HOME/android-sdk/cmdline-tools/latest
-        unzip android-sdk.zip -d $HOME/android-sdk/cmdline-tools/latest
-        mv $HOME/android-sdk/cmdline-tools/latest/cmdline-tools/* $HOME/android-sdk/cmdline-tools/latest
-        rmdir $HOME/android-sdk/cmdline-tools/latest/cmdline-tools
-      shell: bash
+        wget https://dl.google.com/android/repository/commandlinetools-win-8512546_latest.zip -OutFile android-sdk.zip
+        mkdir $env:USERPROFILE\android-sdk\cmdline-tools\latest
+        unzip android-sdk.zip -d $env:USERPROFILE\android-sdk\cmdline-tools\latest
+        Move-Item "$env:USERPROFILE\android-sdk\cmdline-tools\latest\cmdline-tools\*" "$env:USERPROFILE\android-sdk\cmdline-tools\latest\"
+        Remove-Item "$env:USERPROFILE\android-sdk\cmdline-tools\latest\cmdline-tools"
+      shell: pwsh
 
     - name: Set up Android SDK
       run: |
-        export ANDROID_SDK_ROOT=$HOME/android-sdk
-        export PATH=$ANDROID_SDK_ROOT/cmdline-tools/latest/bin:$ANDROID_SDK_ROOT/platform-tools:$PATH
-        echo "y" | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --licenses
-        $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager "platform-tools" "platforms;android-30" "build-tools;30.0.3"
-      env:
-        ANDROID_SDK_ROOT: $HOME/android-sdk
-        PATH: $HOME/android-sdk/cmdline-tools/latest/bin:$HOME/android-sdk/platform-tools:$PATH
-      shell: bash
+        $env:ANDROID_SDK_ROOT="$env:USERPROFILE\android-sdk"
+        $env:PATH="$env:ANDROID_SDK_ROOT\cmdline-tools\latest\bin;$env:ANDROID_SDK_ROOT\platform-tools;$env:PATH"
+        echo y | $env:ANDROID_SDK_ROOT\cmdline-tools\latest\bin\sdkmanager --licenses
+        $env:ANDROID_SDK_ROOT\cmdline-tools\latest\bin\sdkmanager "platform-tools" "platforms;android-30" "build-tools;30.0.3"
+      shell: pwsh
 
     - name: Verify Android SDK tools
       run: |
-        aapt version
-        apksigner --version
-        zipalign -v
-      env:
-        ANDROID_SDK_ROOT: $HOME/android-sdk
-        PATH: $HOME/android-sdk/cmdline-tools/latest/bin:$HOME/android-sdk/platform-tools:$PATH
-      shell: bash
+        $env:ANDROID_SDK_ROOT\cmdline-tools\latest\bin\aapt version
+        $env:ANDROID_SDK_ROOT\cmdline-tools\latest\bin\apksigner --version
+        $env:ANDROID_SDK_ROOT\cmdline-tools\latest\bin\zipalign -v
+      shell: pwsh
 
     - name: Sync Submodules
       run: |
         git submodule init
         git submodule update
-      shell: bash
+      shell: pwsh
 
     - name: Download APK sources
-      run: ./download_sources.sh --shallow
-      shell: bash
+      run: .\download_sources.ps1 --shallow
+      shell: pwsh
 
     - name: Build Open GApps
       run: make
       env:
-        ANDROID_SDK_ROOT: $HOME/android-sdk
-        PATH: $HOME/android-sdk/cmdline-tools/latest/bin:$HOME/android-sdk/platform-tools:$PATH
-      shell: bash
+        ANDROID_SDK_ROOT: $env:USERPROFILE\android-sdk
+        PATH: $env:ANDROID_SDK_ROOT\cmdline-tools\latest\bin;$env:ANDROID_SDK_ROOT\platform-tools;$env:PATH
+      shell: pwsh
 
     - name: Upload Build Artifacts
       uses: actions/upload-artifact@v4.5.0
       with:
         name: OpenGApps-Build
-        path: output/
+        path: output\

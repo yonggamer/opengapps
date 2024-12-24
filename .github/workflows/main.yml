@@ -20,9 +20,9 @@ jobs:
     - name: Set up JDK
       uses: actions/setup-java@v4
       with:
-        distribution: 'temurin'  # Changed from 'adopt' to 'temurin' (AdoptOpenJDK's new name)
-        java-version: '17'       # Updated to Java 17 LTS
-        cache: 'gradle'         # Enable caching for better performance
+        distribution: 'temurin'
+        java-version: '17'       # Using Java 17 LTS
+        # Removed the gradle cache configuration since this project uses Make
 
     - name: Setup Android SDK
       uses: android-actions/setup-android@v3.2.2

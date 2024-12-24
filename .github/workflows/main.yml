@@ -16,16 +16,16 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Install Git
+      - name: Download and Install Git
         run: |
-          choco install git
-          git --version
+          Invoke-WebRequest -Uri https://github.com/git-for-windows/git/releases/download/v2.47.1.windows.1/PortableGit-2.47.1-64-bit.7z.exe -OutFile PortableGit.7z.exe
+          7z x PortableGit.7z.exe -oC:\PortableGit
+          setx PATH "%PATH%;C:\PortableGit\cmd"
+          setx PATH "%PATH%;C:\PortableGit\mingw64\bin"
+          setx PATH "%PATH%;C:\PortableGit\usr\bin"
 
-      - name: Install Git LFS
-        run: |
-          choco install git-lfs
-          git lfs install
-          git lfs --version
+      - name: Verify Git Installation
+        run: git --version
 
       - name: Set up Git
         run: git config --global core.autocrlf false

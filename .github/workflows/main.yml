@@ -19,10 +19,20 @@ jobs:
       - name: Set up Git
         run: git config --global core.autocrlf false
 
+      - name: Install MSYS2
+        uses: msys2/setup-msys2@v2
+        with:
+          update: true
+          install: >-
+            mingw-w64-x86_64-gcc
+            make
+            bash
+
       - name: Run Shell Script
-        shell: bash
+        shell: msys2 {0}
         run: |
-          ./your-shell-script.sh
+          ./download_sources.sh --shallow arm
 
       - name: Run Makefile
-        run: make all
+        shell: msys2 {0}
+        run: make arm-23

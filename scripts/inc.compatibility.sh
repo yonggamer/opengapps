@@ -785,7 +785,7 @@ gohack(){
     gappsstock_go=$gappsstock
     gappsstock_go_optional=$gappsstock_optional
 
-    gappscore_go=$(sed -e "s/\bdefaultetc\b/defaultetcgo/" <<< $gappscore_go)
+     gappscore_go=$(echo "$gappscore_go" | sed -e "s/\bdefaultetc\b/defaultetcgo/")
 
     # -= Google GMS mandatory core packages =-
     #gappspico_go=$(sed -e "s/\bgearheadstub\b//" <<< $gappspico_go) # Remove AndroidAutoStub

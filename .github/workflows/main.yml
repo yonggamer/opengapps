@@ -1,0 +1,45 @@
+name: Build Open GApps
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up JDK 8
+      uses: actions/setup-java@v2
+      with:
+        distribution: 'adopt'
+        java-version: '8'
+
+    - name: Install Android SDK
+      uses: android-actions/setup-android@v2
+
+    - name: Sync Submodules
+      run: |
+        git submodule init
+        git submodule update
+
+    - name: Download APK sources
+      run: |
+        ./download_sources.sh --shallow
+
+    - name: Build Open GApps
+      run: |
+        make
+
+    - name: Upload Build Artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: OpenGApps-Build
+        path: output/

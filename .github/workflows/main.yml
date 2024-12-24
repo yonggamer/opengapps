@@ -24,7 +24,7 @@ jobs:
 
     - name: Install required packages
       run: |
-        choco install wget unzip git
+        choco install unzip git
       shell: pwsh
 
     - name: Check PATH variable
@@ -33,12 +33,12 @@ jobs:
 
     - name: Download and Set up Android SDK Command Line Tools
       run: |
-        # Correct URL to download the Android SDK command line tools
-        wget https://dl.google.com/android/repository/commandlinetools-win-8512546_latest.zip -OutFile android-sdk.zip
+        # Correct URL to download the Android SDK command line tools using Invoke-WebRequest
+        Invoke-WebRequest -Uri "https://dl.google.com/android/repository/commandlinetools-win-8512546_latest.zip" -OutFile "android-sdk.zip"
         # Create the directory for the command line tools
         mkdir $env:USERPROFILE\android-sdk\cmdline-tools\latest
         # Unzip the downloaded file into the created directory
-        unzip android-sdk.zip -d $env:USERPROFILE\android-sdk\cmdline-tools\latest
+        Expand-Archive -Path "android-sdk.zip" -DestinationPath "$env:USERPROFILE\android-sdk\cmdline-tools\latest"
         # Move the extracted files to the correct location
         Move-Item "$env:USERPROFILE\android-sdk\cmdline-tools\latest\cmdline-tools\*" "$env:USERPROFILE\android-sdk\cmdline-tools\latest\"
         # Remove the now-empty cmdline-tools directory

@@ -17,24 +17,13 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4.2.2
 
-    - name: Set up JDK
-      uses: actions/setup-java@v4
-      with:
-        distribution: 'temurin'
-        java-version: '17'
-
-    - name: Setup Android SDK
-      uses: android-actions/setup-android@v3.2.2
-      with:
-        cmdline-tools-version: 'latest'
-        packages: 'build-tools;30.0.3 platform-tools'
-        accept-android-sdk-licenses: true
-
-    - name: Install Android SDK Tools
+    - name: Install dependencies
       run: |
-        sdkmanager --install "platform-tools" "build-tools;30.0.3"
-        echo "$ANDROID_HOME/build-tools/30.0.3" >> $GITHUB_PATH
-        echo "$ANDROID_HOME/platform-tools" >> $GITHUB_PATH
+        sudo apt update
+        sudo apt install -y openjdk-17-jdk
+        sudo apt install -y android-sdk
+        sudo apt install -y android-sdk-platform-tools
+        sudo apt install -y android-sdk-build-tools
 
     - name: Verify Android tools installation
       run: |
@@ -45,24 +34,40 @@ jobs:
         echo "Checking zipalign location:"
         which zipalign
 
+    - name: Set up environment
+      run: |
+        echo "ARCH=arm64" >> $GITHUB_ENV
+        echo "API=30" >> $GITHUB_ENV
+        echo "VARIANT=stock" >> $GITHUB_ENV
+        echo "RELEASE_TYPE=beta" >> $GITHUB_ENV
+
     - name: Sync submodules
       run: |
+        git config --global user.email "actions@github.com"
+        git config --global user.name "GitHub Actions"
         git submodule update --init --recursive
         ./download_sources.sh --shallow
 
     - name: Build Open GApps
       run: |
-        # Print some debug information
+        # Debug information
+        echo "Current directory: $(pwd)"
+        echo "Directory contents: $(ls -la)"
         echo "ANDROID_HOME: $ANDROID_HOME"
         echo "PATH: $PATH"
-        # Run make with verbose output
-        make VERBOSE=1
+        # Build with specific architecture and API level
+        make ARCH=$ARCH API=$API VARIANT=$VARIANT
       env:
-        ANDROID_HOME: ${{ env.ANDROID_HOME }}
-        PATH: ${{ env.ANDROID_HOME }}/build-tools/30.0.3:${{ env.ANDROID_HOME }}/platform-tools:${{ env.PATH }}
+        ANDROID_HOME: /usr/lib/android-sdk
+        PATH: /usr/lib/android-sdk/build-tools/30.0.3:/usr/lib/android-sdk/platform-tools:${{ env.PATH }}
+        TMPDIR: /tmp
+        USE_CCACHE: 1
+        CCACHE_DIR: /tmp/ccache
 
     - name: Archive build artifacts
       uses: actions/upload-artifact@v4.5.0
       with:
-        name: open-gapps
-        path: out/
+        name: open-gapps-${{ env.ARCH }}-${{ env.API }}-${{ env.VARIANT }}
+        path: |
+          out/
+          logs/

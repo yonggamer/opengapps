@@ -23,9 +23,7 @@ jobs:
         java-version: '11'
 
     - name: Install required packages
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y wget unzip coreutils bash
+      run: sudo apt-get update && sudo apt-get install -y wget unzip coreutils bash
       shell: bash
 
     - name: Check if /bin/sh exists
@@ -34,6 +32,24 @@ jobs:
           echo "/bin/sh exists"
         else
           echo "/bin/sh does not exist"
+        fi
+      shell: bash
+
+    - name: Check if /usr/bin/env exists
+      run: |
+        if [ -x /usr/bin/env ]; then
+          echo "/usr/bin/env exists"
+        else
+          echo "/usr/bin/env does not exist"
+        fi
+      shell: bash
+
+    - name: Check if /usr/bin/env/sh exists
+      run: |
+        if [ -x /usr/bin/env/sh ]; then
+          echo "/usr/bin/env/sh exists"
+        else
+          echo "/usr/bin/env/sh does not exist"
         fi
       shell: bash
 

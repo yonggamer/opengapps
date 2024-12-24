@@ -26,19 +26,20 @@ jobs:
         sudo apt install -y android-sdk-build-tools
         sudo apt install -y make
         sudo apt install -y coreutils
+        sudo apt install -y build-essential
 
     - name: Verify essential tools
       run: |
         echo "Checking ls command:"
-        which ls
+        which ls || echo "ls command not found"
         echo "Checking make command:"
-        which make
+        which make || echo "make command not found"
         echo "Checking aapt version:"
-        aapt version
+        aapt version || echo "aapt command not found"
         echo "Checking apksigner location:"
-        which apksigner
+        which apksigner || echo "apksigner command not found"
         echo "Checking zipalign location:"
-        which zipalign
+        which zipalign || echo "zipalign command not found"
 
     - name: Set up environment
       run: |
@@ -58,16 +59,16 @@ jobs:
       run: |
         # Debug information
         echo "Current directory: $(pwd)"
-        echo "Directory contents: $(ls -la)"
+        echo "Checking PATH: $PATH"
+        echo "Directory contents: $(ls -la || echo "ls command failed")"
         echo "ANDROID_HOME: $ANDROID_HOME"
-        echo "PATH: $PATH"
         echo "Environment variables:"
-        env
+        env || echo "env command failed"
         # Build with specific architecture and API level
-        make ARCH=$ARCH API=$API VARIANT=$VARIANT
+        make ARCH=$ARCH API=$API VARIANT=$VARIANT || echo "make command failed"
       env:
         ANDROID_HOME: /usr/lib/android-sdk
-        PATH: /usr/lib/android-sdk/build-tools/30.0.3:/usr/lib/android-sdk/platform-tools:${{ env.PATH }}
+        PATH: /usr/lib/android-sdk/build-tools/30.0.3:/usr/lib/android-sdk/platform-tools:$PATH
         TMPDIR: /tmp
         USE_CCACHE: 1
         CCACHE_DIR: /tmp/ccache

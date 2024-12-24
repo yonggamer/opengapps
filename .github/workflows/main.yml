@@ -38,8 +38,9 @@ jobs:
       run: |
         make
 
-    - name: Upload Build Artifacts
-      uses: actions/upload-artifact@v2
+              - name: Upload a Build Artifact
+                uses: actions/upload-artifact@v4.5.0
+            
       with:
         name: OpenGApps-Build
         path: output/

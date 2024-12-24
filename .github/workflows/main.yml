@@ -26,9 +26,10 @@ jobs:
       run: sudo apt-get update && sudo apt-get install -y wget unzip coreutils bash
       shell: bash
 
-    - name: Create symbolic link for sh
+    - name: Copy sh to /usr/bin/env
       run: |
-        sudo ln -sf /bin/sh /usr/bin/env/sh
+        sudo mkdir -p /usr/bin/env
+        sudo cp /bin/sh /usr/bin/env/sh
       shell: bash
 
     - name: Check if /usr/bin/env exists

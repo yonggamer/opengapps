@@ -797,38 +797,38 @@ gohack(){
     #Replace Duo, Gmail, Maps, LatinImeGoogle
     #Keep YouTube
 
-    gappsstock_go=$(sed -e "s/\bduo\b/duogo/" <<< $gappsstock_go)
-    gappsmini_go=$(sed -e "s/\bphotos\b/gallerygo/" <<< $gappsmini_go) # Should also replace Gallery2
-    gappsmicro_go=$(sed -e "s/\bgmail\b/gmailgo/" <<< $gappsmicro_go)
-    gappsstock_go=$(sed -e "s/\bkeyboardgoogle\b/keyboardgooglego/" <<< $gappsstock_go)
-    gappsmini_go=$(sed -e "s/\bmaps\b/mapsgo/" <<< $gappsmini_go)
+    gappsstock_go=$(echo "$gappsstock_go" | sed -e "s/\bduo\b/duogo/")
+    gappsmini_go=$(echo "$gappsmini_go" | sed -e "s/\bphotos\b/gallerygo/") # Should also replace Gallery2
+    gappsmicro_go=$(echo "$gappsmicro_go" | sed -e "s/\bgmail\b/gmailgo/")
+    gappsstock_go=$(echo "$gappsstock_go" | sed -e "s/\bkeyboardgoogle\b/keyboardgooglego/")
+    gappsmini_go=$(echo "$gappsmini_go" | sed -e "s/\bmaps\b/mapsgo/")
     gappsmini_go="$gappsmini_go
 navgo"
 
     # We replace Velvet (ie. search) by searchgo & google assistant go (as done in the GMS sources, which replaces Velvet (aka QuickSearchBox)
-    gappsnano_go=$(sed -e "s/\bsearch\b/searchgo assistantgo/" <<< $gappsnano_go)
+    gappsnano_go=$(echo "$gappsnano_go" | sed -e "s/\bsearch\b/searchgo assistantgo/")
 
     # Personal addition: YouTubeGo (not listed in GMS packages in 12.0, but present)
     gappsmini_go="$gappsmini_go
 youtubego"
 
     # CameraGo: Remove cameragooglelegacy & cameragoogle
-    gappsstock_go_optional=$(sed -e "s/\bcameragooglelegacy\b//" <<< $gappsstock_go_optional)
-    gappsstock_go=$(sed -e "s/\bcameragoogle\b/cameragooglego/" <<< $gappsstock_go)
+    gappsstock_go_optional=$(echo "$gappsstock_go_optional" | sed -e "s/\bcameragooglelegacy\b//")
+    gappsstock_go=$(echo "$gappsstock_go" | sed -e "s/\bcameragoogle\b/cameragooglego/")
 
     # -= Google Comms Suite =-
     if [ "$VARIANT" = "stock_go" ]; then
-      #Remove : com.google.android.dialer.support.jar only if we replace dialergoogle by dialergooglego
-      gappspico_go=$(sed -e "s/\bdialerframework\b//" <<< $gappspico_go)
+      # Remove : com.google.android.dialer.support.jar only if we replace dialergoogle by dialergooglego
+      gappspico_go=$(echo "$gappspico_go" | sed -e "s/\bdialerframework\b//")
     fi
-    gappsstock_go=$(sed -e "s/\bdialergoogle\b/dialergooglego/" <<< $gappsstock_go)
-    gappsmini_go=$(sed -e "s/\bmessenger\b/messengergo/" <<< $gappsmini_go)
+    gappsstock_go=$(echo "$gappsstock_go" | sed -e "s/\bdialergoogle\b/dialergooglego/")
+    gappsmini_go=$(echo "$gappsmini_go" | sed -e "s/\bmessenger\b/messengergo/")
 
     # -= Google GMS optional application packages =-
     # Add: FilesGoogle ; Remove: Keep
     gappsfull_go="$gappsfull_go
 files"
-    gappsfull_go=$(sed -e "s/\bkeep\b//" <<< $gappsfull_go)
+    gappsfull_go=$(echo "$gappsfull_go" | sed -e "s/\bkeep\b//")
 
     gappssuper="$gappssuper
 gmscorego

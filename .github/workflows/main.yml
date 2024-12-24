@@ -23,7 +23,7 @@ jobs:
         java-version: '11'
 
     - name: Install required packages
-      run: sudo apt-get update && sudo apt-get install -y wget unzip coreutils
+      run: sudo apt-get update && sudo apt-get install -y wget unzip coreutils bash
 
     - name: Download and Set up Android SDK Command Line Tools
       run: |

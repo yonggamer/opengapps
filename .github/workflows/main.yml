@@ -28,8 +28,14 @@ jobs:
 
     - name: Check if /usr/bin/env exists
       run: |
-        if [ -x /usr/bin/env ]; then
-          echo "/usr/bin/env exists"
+        if [ -e /usr/bin/env ]; then
+          if [ -d /usr/bin/env ]; then
+            echo "/usr/bin/env exists and is a directory"
+          elif [ -f /usr/bin/env ]; then
+            echo "/usr/bin/env exists and is a file"
+          else
+            echo "/usr/bin/env exists but is not a regular file or directory"
+          fi
         else
           echo "/usr/bin/env does not exist"
         fi
@@ -37,7 +43,15 @@ jobs:
 
     - name: Copy sh to /usr/bin/env
       run: |
-        sudo cp /bin/sh /usr/bin/env/
+        if [ -d /usr/bin/env ]; then
+          sudo cp /bin/sh /usr/bin/env/
+        elif [ -f /usr/bin/env ]; then
+          echo "Error: /usr/bin/env is a file, not a directory. Cannot copy sh to it."
+          exit 1
+        else
+          echo "Error: /usr/bin/env does not exist or is not accessible."
+          exit 1
+        fi
       shell: bash
 
     - name: Check if /usr/bin/env/sh exists

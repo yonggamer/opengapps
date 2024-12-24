@@ -24,6 +24,7 @@ jobs:
         sudo apt install -y android-sdk
         sudo apt install -y android-sdk-platform-tools
         sudo apt install -y android-sdk-build-tools
+        sudo apt install -y make
 
     - name: Verify Android tools installation
       run: |

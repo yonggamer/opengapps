@@ -46,18 +46,21 @@ jobs:
       shell: pwsh
 
     - name: Set up Android SDK
-      run: |
-        $env:ANDROID_SDK_ROOT="$env:USERPROFILE\android-sdk"
-        $env:PATH="$env:ANDROID_SDK_ROOT\cmdline-tools\latest\bin;$env:ANDROID_SDK_ROOT\platform-tools;$env:PATH"
-        echo y | $env:ANDROID_SDK_ROOT\cmdline-tools\latest\bin\sdkmanager --licenses
-        $env:ANDROID_SDK_ROOT\cmdline-tools\latest\bin\sdkmanager "platform-tools" "platforms;android-30" "build-tools;30.0.3"
       shell: pwsh
+      run: |
+        Set-Item -Path Env:ANDROID_SDK_ROOT -Value "$env:USERPROFILE\android-sdk"
+        Set-Item -Path Env:PATH -Value "$env:ANDROID_SDK_ROOT\cmdline-tools\latest\bin;$env:ANDROID_SDK_ROOT\platform-tools;$env:PATH"
+        Start-Process -NoNewWindow -FilePath "$env:ANDROID_SDK_ROOT\cmdline-tools\latest\bin\sdkmanager.bat" -ArgumentList "--licenses" -Wait -NoNewWindow
+        Start-Process -NoNewWindow -FilePath "$env:ANDROID_SDK_ROOT\cmdline-tools\latest\bin\sdkmanager.bat" -ArgumentList "platform-tools", "platforms;android-30", "build-tools;30.0.3" -Wait -NoNewWindow
 
     - name: Verify Android SDK tools
       run: |
-        $env:ANDROID_SDK_ROOT\cmdline-tools\latest\bin\aapt version
-        $env:ANDROID_SDK_ROOT\cmdline-tools\latest\bin\apksigner --version
-        $env:ANDROID_SDK_ROOT\cmdline-tools\latest\bin\zipalign -v
+        $aapt = Join-Path -Path $env:ANDROID_SDK_ROOT -ChildPath 'cmdline-tools\latest\bin\aapt.exe'
+        $apksigner = Join-Path -Path $env:ANDROID_SDK_ROOT -ChildPath 'cmdline-tools\latest\bin\apksigner.bat'
+        $zipalign = Join-Path -Path $env:ANDROID_SDK_ROOT -ChildPath 'cmdline-tools\latest\bin\zipalign.exe'
+        & $aapt version
+        & $apksigner --version
+        & $zipalign -v
       shell: pwsh
 
     - name: Sync Submodules

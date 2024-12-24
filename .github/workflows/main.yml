@@ -63,6 +63,11 @@ jobs:
       env:
         PATH: /usr/lib/android-sdk/build-tools/30.0.3:/usr/lib/android-sdk/platform-tools:/usr/bin:/bin:/usr/sbin:/sbin
 
+    - name: Prepare output directories
+      run: |
+        mkdir -p out/
+        mkdir -p logs/
+
     - name: Build Open GApps
       run: |
         # Debug information

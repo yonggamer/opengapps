@@ -23,7 +23,7 @@ jobs:
         java-version: '11'
 
     - name: Install required packages
-      run: sudo apt-get update && sudo apt-get install -y wget unzip yes
+      run: sudo apt-get update && sudo apt-get install -y wget unzip
 
     - name: Download Android SDK Command Line Tools
       run: |

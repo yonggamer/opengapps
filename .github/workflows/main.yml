@@ -26,13 +26,9 @@ jobs:
       run: sudo apt-get update && sudo apt-get install -y wget unzip coreutils bash
       shell: bash
 
-    - name: Check if /bin/sh exists
+    - name: Create symbolic link for sh
       run: |
-        if [ -x /bin/sh ]; then
-          echo "/bin/sh exists"
-        else
-          echo "/bin/sh does not exist"
-        fi
+        sudo ln -sf /bin/sh /usr/bin/env/sh
       shell: bash
 
     - name: Check if /usr/bin/env exists

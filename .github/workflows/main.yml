@@ -30,7 +30,7 @@ jobs:
       - name: Set up Git
         run: C:\PortableGit\cmd\git.exe config --global core.autocrlf false
 
-      - name: Install MSYS2
+      - name: Install MSYS2 and Dependencies
         uses: msys2/setup-msys2@v2
         with:
           update: true
@@ -38,6 +38,7 @@ jobs:
             mingw-w64-x86_64-gcc
             make
             bash
+            bc
 
       - name: Run Shell Script
         run: |

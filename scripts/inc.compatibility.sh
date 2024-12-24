@@ -789,7 +789,7 @@ gohack(){
 
     # -= Google GMS mandatory core packages =-
     #gappspico_go=$(sed -e "s/\bgearheadstub\b//" <<< $gappspico_go) # Remove AndroidAutoStub
-    gappscore_go=$(sed -e "s/\bgmscore\b/gmscorego/" <<< $gappscore_go)
+    gappscore_go=$(echo "$gappscore_go" | sed -e "s/\bgmscore\b/gmscorego/")
 
     # -= Google GMS mandatory application packages =-
     #Remove Drive, Photos, Velvet, YTMusic, Videos

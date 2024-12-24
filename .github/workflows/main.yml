@@ -26,11 +26,6 @@ jobs:
       run: sudo apt-get update && sudo apt-get install -y wget unzip coreutils bash
       shell: bash
 
-    - name: Copy sh to /usr/bin/env
-      run: |
-        sudo cp /bin/sh /usr/bin/env/
-      shell: bash
-
     - name: Check if /usr/bin/env exists
       run: |
         if [ -x /usr/bin/env ]; then
@@ -38,6 +33,11 @@ jobs:
         else
           echo "/usr/bin/env does not exist"
         fi
+      shell: bash
+
+    - name: Copy sh to /usr/bin/env
+      run: |
+        sudo cp /bin/sh /usr/bin/env/
       shell: bash
 
     - name: Check if /usr/bin/env/sh exists

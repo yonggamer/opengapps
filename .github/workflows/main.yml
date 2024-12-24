@@ -61,6 +61,8 @@ jobs:
         echo "Directory contents: $(ls -la)"
         echo "ANDROID_HOME: $ANDROID_HOME"
         echo "PATH: $PATH"
+        echo "Environment variables:"
+        env
         # Build with specific architecture and API level
         make ARCH=$ARCH API=$API VARIANT=$VARIANT
       env:

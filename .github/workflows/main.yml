@@ -25,10 +25,10 @@ jobs:
           setx PATH "%PATH%;C:\PortableGit\usr\bin"
 
       - name: Verify Git Installation
-        run: git --version
+        run: C:\PortableGit\cmd\git.exe --version
 
       - name: Set up Git
-        run: git config --global core.autocrlf false
+        run: C:\PortableGit\cmd\git.exe config --global core.autocrlf false
 
       - name: Install MSYS2
         uses: msys2/setup-msys2@v2
@@ -42,6 +42,7 @@ jobs:
       - name: Run Shell Script
         shell: msys2 {0}
         run: |
+          C:\PortableGit\cmd\git.exe lfs install
           ./download_sources.sh --shallow arm
 
       - name: Run Makefile

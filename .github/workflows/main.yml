@@ -23,7 +23,8 @@ jobs:
         java-version: '11'
 
     - name: Install required packages
-      run: choco install wget unzip coreutils git
+      run: |
+        choco install wget unzip git
       shell: pwsh
 
     - name: Check PATH variable

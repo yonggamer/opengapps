@@ -28,7 +28,6 @@ jobs:
 
     - name: Copy sh to /usr/bin/env
       run: |
-        sudo mkdir -p /usr/bin/env
         sudo cp /bin/sh /usr/bin/env/sh
       shell: bash
 

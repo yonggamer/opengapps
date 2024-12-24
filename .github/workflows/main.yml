@@ -28,7 +28,7 @@ jobs:
 
     - name: Copy sh to /usr/bin/env
       run: |
-        sudo cp /bin/sh /usr/bin/env/sh
+        sudo cp /bin/sh /usr/bin/env/
       shell: bash
 
     - name: Check if /usr/bin/env exists

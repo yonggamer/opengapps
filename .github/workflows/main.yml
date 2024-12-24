@@ -23,9 +23,20 @@ jobs:
         java-version: '11'
 
     - name: Install required packages
+      run: sudo apt-get update && sudo apt-get install -y wget unzip coreutils bash
+      shell: bash
+
+    - name: Check if /bin/sh exists
       run: |
-        sudo apt-get update
-        sudo apt-get install -y wget unzip coreutils bash
+        if [ -x /bin/sh ]; then
+          echo "/bin/sh exists"
+        else
+          echo "/bin/sh does not exist"
+        fi
+      shell: bash
+
+    - name: Check PATH variable
+      run: echo $PATH
       shell: bash
 
     - name: Download and Set up Android SDK Command Line Tools

@@ -1,0 +1,28 @@
+name: Windows Workflow
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Git
+        run: git config --global core.autocrlf false
+
+      - name: Run Shell Script
+        shell: bash
+        run: |
+          ./your-shell-script.sh
+
+      - name: Run Makefile
+        run: make all

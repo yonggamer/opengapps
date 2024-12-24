@@ -22,53 +22,46 @@ jobs:
         distribution: 'adopt'
         java-version: '17'
 
-    - name: Cache Android SDK
-      uses: actions/cache@v2
-      with:
-        path: ${{ runner.tool_cache }}/android-sdk
-        key: ${{ runner.os }}-android-sdk
-        restore-keys: |
-          ${{ runner.os }}-android-sdk
-
     - name: Install required packages
       run: |
         choco install unzip git
       shell: pwsh
 
-    - name: Check PATH variable
-      run: echo $env:PATH
-      shell: pwsh
-
     - name: Download and Set up Android SDK Command Line Tools
       run: |
-        if (!(Test-Path -Path "$env:RUNNER_TOOL_CACHE/android-sdk")) {
-          # Correct URL to download the Android SDK command line tools using Invoke-WebRequest
-          Invoke-WebRequest -Uri "https://dl.google.com/android/repository/commandlinetools-win-8512546_latest.zip" -OutFile "android-sdk.zip"
-          # Create the directory for the command line tools
-          mkdir $env:RUNNER_TOOL_CACHE\android-sdk\cmdline-tools\latest
-          # Unzip the downloaded file into the created directory
-          Expand-Archive -Path "android-sdk.zip" -DestinationPath "$env:RUNNER_TOOL_CACHE\android-sdk\cmdline-tools\latest"
-          # Move the extracted files to the correct location
-          Move-Item "$env:RUNNER_TOOL_CACHE\android-sdk\cmdline-tools\latest\cmdline-tools\*" "$env:RUNNER_TOOL_CACHE\android-sdk\cmdline-tools\latest\"
-          # Remove the now-empty cmdline-tools directory
-          Remove-Item "$env:RUNNER_TOOL_CACHE\android-sdk\cmdline-tools\latest\cmdline-tools"
-        }
-      shell: pwsh
+        $sdkUrl = "https://dl.google.com/android/repository/commandlinetools-win-8512546_latest.zip"
+        $sdkPath = "$env:RUNNER_TOOL_CACHE\android-sdk"
 
-    - name: Set up Android SDK
-      shell: pwsh
-      run: |
-        Set-Item -Path Env:ANDROID_SDK_ROOT -Value "$env:RUNNER_TOOL_CACHE\android-sdk"
+        if (!(Test-Path -Path $sdkPath)) {
+          # Download the command line tools
+          Invoke-WebRequest -Uri $sdkUrl -OutFile "android-sdk.zip"
+          # Create the directory for the command line tools
+          mkdir $sdkPath\cmdline-tools\latest
+          # Unzip the downloaded file into the created directory
+          Expand-Archive -Path "android-sdk.zip" -DestinationPath "$sdkPath\cmdline-tools\latest"
+          # Move the extracted files to the correct location
+          Move-Item "$sdkPath\cmdline-tools\latest\cmdline-tools\*" "$sdkPath\cmdline-tools\latest\"
+          # Remove the now-empty cmdline-tools directory
+          Remove-Item "$sdkPath\cmdline-tools\latest\cmdline-tools"
+        }
+
+        # Set environment variables
+        Set-Item -Path Env:ANDROID_SDK_ROOT -Value $sdkPath
         Set-Item -Path Env:PATH -Value "$env:ANDROID_SDK_ROOT\cmdline-tools\latest\bin;$env:ANDROID_SDK_ROOT\platform-tools;$env:PATH"
+
+        # Accept licenses
         Start-Process -FilePath "$env:ANDROID_SDK_ROOT\cmdline-tools\latest\bin\sdkmanager.bat" -ArgumentList "--licenses" -NoNewWindow -Wait
+
+        # Install platform-tools, platforms, and build-tools
         Start-Process -FilePath "$env:ANDROID_SDK_ROOT\cmdline-tools\latest\bin\sdkmanager.bat" -ArgumentList "platform-tools", "platforms;android-30", "build-tools;30.0.3" -NoNewWindow -Wait
+      shell: pwsh
 
     - name: Verify Android SDK tools
       run: |
         # Debugging: Print environment variables
         echo "ANDROID_SDK_ROOT: $env:ANDROID_SDK_ROOT"
         echo "PATH: $env:PATH"
-        
+
         # List the contents of the build-tools directory
         Get-ChildItem -Path "$env:ANDROID_SDK_ROOT\build-tools\30.0.3"
 

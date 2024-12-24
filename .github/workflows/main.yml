@@ -69,31 +69,31 @@ jobs:
         echo "ANDROID_SDK_ROOT: $env:ANDROID_SDK_ROOT"
         echo "PATH: $env:PATH"
         
-        # List the contents of the tools directory
-        Get-ChildItem -Path "$env:ANDROID_SDK_ROOT\cmdline-tools\latest\bin"
+        # List the contents of the build-tools directory
+        Get-ChildItem -Path "$env:ANDROID_SDK_ROOT\build-tools\30.0.3"
 
         # Check if aapt.exe exists
-        if (Test-Path -Path "$env:ANDROID_SDK_ROOT\cmdline-tools\latest\bin\aapt.exe") {
-          $aapt = "$env:ANDROID_SDK_ROOT\cmdline-tools\latest\bin\aapt.exe"
+        if (Test-Path -Path "$env:ANDROID_SDK_ROOT\build-tools\30.0.3\aapt.exe") {
+          $aapt = "$env:ANDROID_SDK_ROOT\build-tools\30.0.3\aapt.exe"
           & $aapt version
         } else {
-          Write-Error "aapt.exe not found at $env:ANDROID_SDK_ROOT\cmdline-tools\latest\bin\aapt.exe"
+          Write-Error "aapt.exe not found at $env:ANDROID_SDK_ROOT\build-tools\30.0.3\aapt.exe"
         }
 
         # Check if apksigner.bat exists
-        if (Test-Path -Path "$env:ANDROID_SDK_ROOT\cmdline-tools\latest\bin\apksigner.bat") {
-          $apksigner = "$env:ANDROID_SDK_ROOT\cmdline-tools\latest\bin\apksigner.bat"
+        if (Test-Path -Path "$env:ANDROID_SDK_ROOT\build-tools\30.0.3\apksigner.bat") {
+          $apksigner = "$env:ANDROID_SDK_ROOT\build-tools\30.0.3\apksigner.bat"
           & $apksigner --version
         } else {
-          Write-Error "apksigner.bat not found at $env:ANDROID_SDK_ROOT\cmdline-tools\latest\bin\apksigner.bat"
+          Write-Error "apksigner.bat not found at $env:ANDROID_SDK_ROOT\build-tools\30.0.3\apksigner.bat"
         }
 
         # Check if zipalign.exe exists
-        if (Test-Path -Path "$env:ANDROID_SDK_ROOT\cmdline-tools\latest\bin\zipalign.exe") {
-          $zipalign = "$env:ANDROID_SDK_ROOT\cmdline-tools\latest\bin\zipalign.exe"
+        if (Test-Path -Path "$env:ANDROID_SDK_ROOT\build-tools\30.0.3\zipalign.exe") {
+          $zipalign = "$env:ANDROID_SDK_ROOT\build-tools\30.0.3\zipalign.exe"
           & $zipalign -v
         } else {
-          Write-Error "zipalign.exe not found at $env:ANDROID_SDK_ROOT\cmdline-tools\latest\bin\zipalign.exe"
+          Write-Error "zipalign.exe not found at $env:ANDROID_SDK_ROOT\build-tools\30.0.3\zipalign.exe"
         }
       shell: pwsh
 
@@ -111,7 +111,7 @@ jobs:
       run: make
       env:
         ANDROID_SDK_ROOT: ${{ runner.tool_cache }}/android-sdk
-        PATH: ${{ runner.tool_cache }}/android-sdk/cmdline-tools/latest/bin:${{ runner.tool_cache }}/android-sdk/platform-tools:${{ runner.tool_cache }}/android-sdk
+        PATH: ${{ runner.tool_cache }}/android-sdk/cmdline-tools/latest/bin:${{ runner.tool_cache }}/android-sdk/platform-tools:${{ runner.tool_cache }}/android-sdk/build-tools/30.0.3
         JAVA_HOME: C:\hostedtoolcache\windows\Java_Adopt_jdk\17.0.13-11\x64
       shell: pwsh
 

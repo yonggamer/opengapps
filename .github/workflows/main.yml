@@ -17,7 +17,7 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4.2.2
 
-    - name: Install dependencies
+    - name: Install essential dependencies
       run: |
         sudo apt update
         sudo apt install -y openjdk-17-jdk
@@ -26,10 +26,13 @@ jobs:
         sudo apt install -y android-sdk-build-tools
         sudo apt install -y make
         sudo apt install -y coreutils
-        sudo apt install -y build-essential
 
-    - name: Verify Android tools installation
+    - name: Verify essential tools
       run: |
+        echo "Checking ls command:"
+        which ls
+        echo "Checking make command:"
+        which make
         echo "Checking aapt version:"
         aapt version
         echo "Checking apksigner location:"

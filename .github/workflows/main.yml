@@ -16,6 +16,17 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - name: Install Git
+        run: |
+          choco install git
+          git --version
+
+      - name: Install Git LFS
+        run: |
+          choco install git-lfs
+          git lfs install
+          git lfs --version
+
       - name: Set up Git
         run: git config --global core.autocrlf false
 

@@ -40,11 +40,9 @@ jobs:
             bash
 
       - name: Run Shell Script
-        shell: msys2 {0}
         run: |
-          C:\PortableGit\cmd\git.exe lfs install
-          ./download_sources.sh --shallow arm
+          C:\PortableGit\usr\bin\bash.exe -c "C:/PortableGit/cmd/git.exe lfs install"
+          C:\PortableGit\usr\bin\bash.exe -c "./download_sources.sh --shallow arm"
 
       - name: Run Makefile
-        shell: msys2 {0}
-        run: make arm-23
+        run: C:\PortableGit\usr\bin\bash.exe -c "make arm-23"

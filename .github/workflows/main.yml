@@ -28,20 +28,20 @@ jobs:
     - name: Download Android SDK Command Line Tools
       run: |
         wget https://dl.google.com/android/repository/commandlinetools-linux-8512546_latest.zip -O android-sdk.zip
-        mkdir -p $HOME/android-sdk/cmdline-tools
-        unzip android-sdk.zip -d $HOME/android-sdk/cmdline-tools
         mkdir -p $HOME/android-sdk/cmdline-tools/latest
-        mv $HOME/android-sdk/cmdline-tools/cmdline-tools/* $HOME/android-sdk/cmdline-tools/latest/
+        unzip android-sdk.zip -d $HOME/android-sdk/cmdline-tools/latest
+      shell: bash
 
     - name: Set up Android SDK
       run: |
         export ANDROID_SDK_ROOT=$HOME/android-sdk
         export PATH=$PATH:$ANDROID_SDK_ROOT/cmdline-tools/latest/bin:$ANDROID_SDK_ROOT/platform-tools
-        yes | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --licenses
-        $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager "platform-tools" "platforms;android-30" "build-tools;30.0.3"
+        yes | sdkmanager --licenses
+        sdkmanager "platform-tools" "platforms;android-30" "build-tools;30.0.3"
       env:
         ANDROID_SDK_ROOT: $HOME/android-sdk
-        PATH: $PATH:$HOME/android-sdk/cmdline-tools/latest/bin:$HOME/android-sdk/platform-tools
+        PATH: $PATH:$ANDROID_SDK_ROOT/cmdline-tools/latest/bin:$ANDROID_SDK_ROOT/platform-tools
+      shell: bash
 
     - name: Verify Android SDK tools
       run: |
@@ -51,20 +51,24 @@ jobs:
       env:
         ANDROID_SDK_ROOT: $HOME/android-sdk
         PATH: $PATH:$HOME/android-sdk/cmdline-tools/latest/bin:$HOME/android-sdk/platform-tools
+      shell: bash
 
     - name: Sync Submodules
       run: |
         git submodule init
         git submodule update
+      shell: bash
 
     - name: Download APK sources
       run: ./download_sources.sh --shallow
+      shell: bash
 
     - name: Build Open GApps
       run: make
       env:
         ANDROID_SDK_ROOT: $HOME/android-sdk
         PATH: $PATH:$HOME/android-sdk/cmdline-tools/latest/bin:$HOME/android-sdk/platform-tools
+      shell: bash
 
     - name: Upload Build Artifacts
       uses: actions/upload-artifact@v4.5.0

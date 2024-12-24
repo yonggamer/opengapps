@@ -35,18 +35,15 @@ jobs:
         sdkmanager --install "platform-tools" "build-tools;30.0.3"
         echo "$ANDROID_HOME/build-tools/30.0.3" >> $GITHUB_PATH
         echo "$ANDROID_HOME/platform-tools" >> $GITHUB_PATH
-        # Make sure the tools are executable
-        chmod +x $ANDROID_HOME/build-tools/30.0.3/*
-        chmod +x $ANDROID_HOME/platform-tools/*
 
     - name: Verify Android tools installation
       run: |
-        ls -l $ANDROID_HOME/build-tools/30.0.3/
-        ls -l $ANDROID_HOME/platform-tools/
-        echo "PATH=$PATH"
-        $ANDROID_HOME/build-tools/30.0.3/aapt version
-        $ANDROID_HOME/build-tools/30.0.3/zipalign -v
-        $ANDROID_HOME/build-tools/30.0.3/apksigner --version
+        echo "Checking aapt version:"
+        aapt version
+        echo "Checking apksigner location:"
+        which apksigner
+        echo "Checking zipalign location:"
+        which zipalign
 
     - name: Sync submodules
       run: |
@@ -54,7 +51,12 @@ jobs:
         ./download_sources.sh --shallow
 
     - name: Build Open GApps
-      run: make
+      run: |
+        # Print some debug information
+        echo "ANDROID_HOME: $ANDROID_HOME"
+        echo "PATH: $PATH"
+        # Run make with verbose output
+        make VERBOSE=1
       env:
         ANDROID_HOME: ${{ env.ANDROID_HOME }}
         PATH: ${{ env.ANDROID_HOME }}/build-tools/30.0.3:${{ env.ANDROID_HOME }}/platform-tools:${{ env.PATH }}

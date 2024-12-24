@@ -18,10 +18,11 @@ jobs:
       uses: actions/checkout@v4.2.2
 
     - name: Set up JDK
-      uses: actions/setup-java@v2
+      uses: actions/setup-java@v4
       with:
-        distribution: 'adopt'
-        java-version: '8'
+        distribution: 'temurin'  # Changed from 'adopt' to 'temurin' (AdoptOpenJDK's new name)
+        java-version: '17'       # Updated to Java 17 LTS
+        cache: 'gradle'         # Enable caching for better performance
 
     - name: Setup Android SDK
       uses: android-actions/setup-android@v3.2.2

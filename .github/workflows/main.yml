@@ -17,29 +17,40 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4.2.2
 
-    - name: Set up Android SDK
-      uses: android-actions/setup-android@v3.2.2
-
     - name: Set up JDK
       uses: actions/setup-java@v2
       with:
         distribution: 'adopt'
         java-version: '8'
 
+    - name: Setup Android SDK
+      uses: android-actions/setup-android@v3.2.2
+      with:
+        build-tools: '30.0.3'
+        cmdline-tools: 'latest'
+        platform: '30'
+
+    - name: Install Android SDK packages
+      run: |
+        sdkmanager "platform-tools" "build-tools;30.0.3"
+        echo "$ANDROID_HOME/build-tools/30.0.3" >> $GITHUB_PATH
+        echo "$ANDROID_HOME/platform-tools" >> $GITHUB_PATH
+
+    - name: Verify Android tools
+      run: |
+        which aapt
+        which zipalign
+        which apksigner
+
     - name: Sync submodules
       run: |
         git submodule update --init --recursive
         ./download_sources.sh --shallow
 
-    - name: Add Android SDK to PATH
-      run: |
-        echo "::add-path::${ANDROID_HOME}/emulator"
-        echo "::add-path::${ANDROID_HOME}/tools"
-        echo "::add-path::${ANDROID_HOME}/tools/bin"
-        echo "::add-path::${ANDROID_HOME}/platform-tools"
-
     - name: Build Open GApps
       run: make
+      env:
+        ANDROID_HOME: ${{ env.ANDROID_HOME }}
 
     - name: Archive build artifacts
       uses: actions/upload-artifact@v4.5.0

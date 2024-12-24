@@ -1,0 +1,37 @@
+name: Build Open GApps
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up JDK
+      uses: actions/setup-java@v2
+      with:
+        distribution: 'adopt'
+        java-version: '8'
+
+    - name: Sync submodules
+      run: |
+        git submodule update --init --recursive
+        ./download_sources.sh --shallow
+
+    - name: Build Open GApps
+      run: make
+
+    - name: Archive build artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: open-gapps
+        path: out/

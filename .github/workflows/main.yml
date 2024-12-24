@@ -81,6 +81,13 @@ jobs:
         USE_CCACHE: 1
         CCACHE_DIR: /tmp/ccache
 
+    - name: List output directory contents
+      run: |
+        echo "Listing contents of out/ directory"
+        ls -la out/ || echo "out directory not found"
+        echo "Listing contents of logs/ directory"
+        ls -la logs/ || echo "logs directory not found"
+
     - name: Archive build artifacts
       uses: actions/upload-artifact@v4.5.0
       with:

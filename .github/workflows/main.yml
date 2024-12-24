@@ -58,19 +58,40 @@ jobs:
     - name: Set up Android SDK
       shell: pwsh
       run: |
-        $env:ANDROID_SDK_ROOT = "$env:RUNNER_TOOL_CACHE\android-sdk"
-        $env:PATH = "$env:ANDROID_SDK_ROOT\cmdline-tools\latest\bin;$env:ANDROID_SDK_ROOT\platform-tools;$env:PATH"
+        Set-Item -Path Env:ANDROID_SDK_ROOT -Value "$env:RUNNER_TOOL_CACHE\android-sdk"
+        Set-Item -Path Env:PATH -Value "$env:ANDROID_SDK_ROOT\cmdline-tools\latest\bin;$env:ANDROID_SDK_ROOT\platform-tools;$env:PATH"
         Start-Process -FilePath "$env:ANDROID_SDK_ROOT\cmdline-tools\latest\bin\sdkmanager.bat" -ArgumentList "--licenses" -NoNewWindow -Wait
         Start-Process -FilePath "$env:ANDROID_SDK_ROOT\cmdline-tools\latest\bin\sdkmanager.bat" -ArgumentList "platform-tools", "platforms;android-30", "build-tools;30.0.3" -NoNewWindow -Wait
 
     - name: Verify Android SDK tools
       run: |
-        $aapt = Join-Path -Path $env:ANDROID_SDK_ROOT -ChildPath 'cmdline-tools\latest\bin\aapt.exe'
-        $apksigner = Join-Path -Path $env:ANDROID_SDK_ROOT -ChildPath 'cmdline-tools\latest\bin\apksigner.bat'
-        $zipalign = Join-Path -Path $env:ANDROID_SDK_ROOT -ChildPath 'cmdline-tools\latest\bin\zipalign.exe'
-        & $aapt version
-        & $apksigner --version
-        & $zipalign -v
+        # Debugging: Print environment variables
+        echo "ANDROID_SDK_ROOT: $env:ANDROID_SDK_ROOT"
+        echo "PATH: $env:PATH"
+
+        # Check if aapt.exe exists
+        if (Test-Path -Path "$env:ANDROID_SDK_ROOT\cmdline-tools\latest\bin\aapt.exe") {
+          $aapt = "$env:ANDROID_SDK_ROOT\cmdline-tools\latest\bin\aapt.exe"
+          & $aapt version
+        } else {
+          Write-Error "aapt.exe not found at $env:ANDROID_SDK_ROOT\cmdline-tools\latest\bin\aapt.exe"
+        }
+
+        # Check if apksigner.bat exists
+        if (Test-Path -Path "$env:ANDROID_SDK_ROOT\cmdline-tools\latest\bin\apksigner.bat") {
+          $apksigner = "$env:ANDROID_SDK_ROOT\cmdline-tools\latest\bin\apksigner.bat"
+          & $apksigner --version
+        } else {
+          Write-Error "apksigner.bat not found at $env:ANDROID_SDK_ROOT\cmdline-tools\latest\bin\apksigner.bat"
+        }
+
+        # Check if zipalign.exe exists
+        if (Test-Path -Path "$env:ANDROID_SDK_ROOT\cmdline-tools\latest\bin\zipalign.exe") {
+          $zipalign = "$env:ANDROID_SDK_ROOT\cmdline-tools\latest\bin\zipalign.exe"
+          & $zipalign -v
+        } else {
+          Write-Error "zipalign.exe not found at $env:ANDROID_SDK_ROOT\cmdline-tools\latest\bin\zipalign.exe"
+        }
       shell: pwsh
 
     - name: Sync Submodules

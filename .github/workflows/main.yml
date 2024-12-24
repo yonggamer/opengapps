@@ -23,13 +23,15 @@ jobs:
         java-version: '11'
 
     - name: Install required packages
-      run: sudo apt-get update && sudo apt-get install -y wget unzip
+      run: sudo apt-get update && sudo apt-get install -y wget unzip coreutils
 
-    - name: Download Android SDK Command Line Tools
+    - name: Download and Set up Android SDK Command Line Tools
       run: |
         wget https://dl.google.com/android/repository/commandlinetools-linux-8512546_latest.zip -O android-sdk.zip
         mkdir -p $HOME/android-sdk/cmdline-tools/latest
         unzip android-sdk.zip -d $HOME/android-sdk/cmdline-tools/latest
+        mv $HOME/android-sdk/cmdline-tools/latest/cmdline-tools/* $HOME/android-sdk/cmdline-tools/latest
+        rmdir $HOME/android-sdk/cmdline-tools/latest/cmdline-tools
       shell: bash
 
     - name: Set up Android SDK
@@ -40,7 +42,7 @@ jobs:
         sdkmanager "platform-tools" "platforms;android-30" "build-tools;30.0.3"
       env:
         ANDROID_SDK_ROOT: $HOME/android-sdk
-        PATH: $PATH:$ANDROID_SDK_ROOT/cmdline-tools/latest/bin:$ANDROID_SDK_ROOT/platform-tools
+        PATH: $PATH:$HOME/android-sdk/cmdline-tools/latest/bin:$HOME/android-sdk/platform-tools
       shell: bash
 
     - name: Verify Android SDK tools

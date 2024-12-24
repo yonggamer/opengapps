@@ -7,7 +7,6 @@ on:
   pull_request:
     branches:
       - main
-  workflow_dispatch:
 
 jobs:
   build:
@@ -15,7 +14,13 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4.2.2
+
+    - name: Set up Android SDK
+      uses: android-actions/setup-android@v3.2.2
+      with:
+        api-level: 30
+        build-tools: 30.0.3
 
     - name: Set up JDK
       uses: actions/setup-java@v2

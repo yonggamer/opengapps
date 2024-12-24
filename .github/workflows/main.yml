@@ -35,7 +35,7 @@ jobs:
           C:\PortableGit\usr\bin\bash.exe -c "curl -L -o msys2.exe https://github.com/msys2/msys2-installer/releases/download/2022-01-18/msys2-x86_64-20220118.exe"
           C:\PortableGit\usr\bin\bash.exe -c "cmd.exe /C msys2.exe --root C:/msys64 --script msys2.ini"
 
-      - name: Update MSYS2 and install bc
+      - name: Update MSYS2 and Install bc
         run: |
           C:\PortableGit\usr\bin\bash.exe -c "C:/msys64/usr/bin/bash -lc 'pacman -Sy --noconfirm'"
           C:\PortableGit\usr\bin\bash.exe -c "C:/msys64/usr/bin/bash -lc 'pacman -S --noconfirm bc'"

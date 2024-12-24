@@ -27,6 +27,8 @@ jobs:
         sudo apt install -y make
         sudo apt install -y coreutils
         sudo apt install -y build-essential
+      env:
+        PATH: /usr/lib/android-sdk/build-tools/30.0.3:/usr/lib/android-sdk/platform-tools:/usr/bin:/bin:/usr/sbin:/sbin
 
     - name: Verify essential tools
       run: |
@@ -40,6 +42,8 @@ jobs:
         which apksigner || echo "apksigner command not found"
         echo "Checking zipalign location:"
         which zipalign || echo "zipalign command not found"
+      env:
+        PATH: /usr/lib/android-sdk/build-tools/30.0.3:/usr/lib/android-sdk/platform-tools:/usr/bin:/bin:/usr/sbin:/sbin
 
     - name: Set up environment
       run: |
@@ -47,6 +51,8 @@ jobs:
         echo "API=30" >> $GITHUB_ENV
         echo "VARIANT=stock" >> $GITHUB_ENV
         echo "RELEASE_TYPE=beta" >> $GITHUB_ENV
+      env:
+        PATH: /usr/lib/android-sdk/build-tools/30.0.3:/usr/lib/android-sdk/platform-tools:/usr/bin:/bin:/usr/sbin:/sbin
 
     - name: Sync submodules
       run: |
@@ -54,6 +60,8 @@ jobs:
         git config --global user.name "GitHub Actions"
         git submodule update --init --recursive
         ./download_sources.sh --shallow
+      env:
+        PATH: /usr/lib/android-sdk/build-tools/30.0.3:/usr/lib/android-sdk/platform-tools:/usr/bin:/bin:/usr/sbin:/sbin
 
     - name: Build Open GApps
       run: |
@@ -68,7 +76,7 @@ jobs:
         make ARCH=$ARCH API=$API VARIANT=$VARIANT || echo "make command failed"
       env:
         ANDROID_HOME: /usr/lib/android-sdk
-        PATH: /usr/lib/android-sdk/build-tools/30.0.3:/usr/lib/android-sdk/platform-tools:$PATH
+        PATH: /usr/lib/android-sdk/build-tools/30.0.3:/usr/lib/android-sdk/platform-tools:/usr/bin:/bin:/usr/sbin:/sbin:$PATH
         TMPDIR: /tmp
         USE_CCACHE: 1
         CCACHE_DIR: /tmp/ccache

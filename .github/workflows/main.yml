@@ -95,4 +95,4 @@ jobs:
       uses: actions/upload-artifact@v4.5.0
       with:
         name: open-gapps-${{ env.ARCH }}-${{ env.API }}-${{ env.VARIANT }}
-        path: /home/runner/work/opengapps/opengapps/build/arm/19/
+        path: /home/runner/work/opengapps/opengapps/build/

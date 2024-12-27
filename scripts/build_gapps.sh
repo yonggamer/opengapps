@@ -28,8 +28,7 @@ variants=("stock" "full" "mini" "micro" "nano" "pico" "aroma" "super")
 generate_gapps_package() {
     local variant=$1
     echo "Generating Open GApps $variant package for arm with API level $API_LEVEL..."
-    echo "Cleaning build area: /home/runner/work/opengapps/opengapps/build/arm/$API_LEVEL/$variant"
-
+    
     # Ensure the build directory exists
     mkdir -p "/home/runner/work/opengapps/opengapps/build/arm/$API_LEVEL/$variant"
 

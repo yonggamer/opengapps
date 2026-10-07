@@ -121,9 +121,9 @@ jobs:
             exit 1
           fi
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v6
         with:
           distribution: temurin
           java-version: '17'
@@ -176,7 +176,7 @@ jobs:
           BUILD_VARIANT: ${{ inputs.variant }}
         run: make "$BUILD_ARCH-$BUILD_API-$BUILD_VARIANT"
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: open-gapps-${{ inputs.arch }}-android-${{ inputs.android_version }}-${{ inputs.variant }}
           path: out/open_gapps-${{ inputs.arch }}-${{ inputs.android_version }}-${{ inputs.variant }}-*-UNOFFICIAL.zip

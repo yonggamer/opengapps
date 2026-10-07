@@ -178,7 +178,7 @@ jobs:
 
       - uses: actions/upload-artifact@v7
         with:
-          name: open-gapps-${{ inputs.arch }}-android-${{ inputs.android_version }}-${{ inputs.variant }}
           path: out/open_gapps-${{ inputs.arch }}-${{ inputs.android_version }}-${{ inputs.variant }}-*-UNOFFICIAL.zip
+          archive: false
           if-no-files-found: error
           retention-days: 7

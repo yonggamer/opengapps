@@ -163,7 +163,7 @@ jobs:
             x86_64) modules=(all arm x86 x86_64) ;;
           esac
           for module in "${modules[@]}"; do
-            git submodule update --init --depth=1 --checkout -- "sources/$module"
+            git submodule update --init --remote --depth=1 --checkout -- "sources/$module"
             git -C "sources/$module" lfs pull
             lfs_objects="$(git -C "sources/$module" rev-parse --git-path lfs/objects)"
             rm -rf -- "$lfs_objects"
